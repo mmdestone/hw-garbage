@@ -1,3 +1,4 @@
+# python -m src_yml.preprocess
 # %%
 try:
     import warnings
@@ -91,9 +92,9 @@ def img_aug(r):
                 data.append([fname, r.label])
                 # 数据增强
                 if ro == -1:
-                    img_rotate = img_new
+                    img_rotate = img_raw
                 else:
-                    img_rotate = img_new.transpose(ro)
+                    img_rotate = img_raw.transpose(ro)
                 enh = ImageEnhance.Brightness(img_rotate)
                 img_ehc = enh.enhance(ehc)
                 img_ft = img_ehc.filter(ft)
@@ -102,6 +103,7 @@ def img_aug(r):
     return pd.DataFrame(data, columns=labels.columns)
 
 
+# %%
 train_lbs = []
 aug_times = len(rotates)*len(filters)*len(enhances)  # 扩充倍数
 min_smaples = labels_tr.groupby(by='label').count().min().fname
