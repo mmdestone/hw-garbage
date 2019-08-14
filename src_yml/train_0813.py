@@ -31,7 +31,7 @@ import time
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # %%
-path_data = 'E:/garbage_classify/train_data'
+path_data = 'garbage_classify/train_data'
 batch_size = 32
 img_width = 224
 img_height = 224

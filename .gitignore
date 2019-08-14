@@ -1,6 +1,6 @@
 tmp/*
+garbage_classify/*
 !.keep
-
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
