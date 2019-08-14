@@ -1,5 +1,6 @@
 {
     "python.pythonPath": ".env\\Scripts\\python.exe",
     "terminal.integrated.shell.windows": "cmd.exe",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.dataScience.jupyterServerURI": "http://172.26.1.31:8888/notebooks/notebooks/hw-garbage/src_yj/exp2.ipynb"
 }
