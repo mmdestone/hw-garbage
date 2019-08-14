@@ -35,31 +35,29 @@ path_data = 'garbage_classify/train_data'
 batch_size = 32
 img_width = 224
 img_height = 224
-random_seed = 1000
+img_size = 224
+random_seed = 201908
+path_data_train = 'tmp/data_train/'
+path_data_valid = 'tmp/data_valid/'
+labels_file = 'tmp/labels_raw.csv'
+
 
 # %%
-labels_file = 'tmp/labels.csv'
-try:
-    labels = pd.read_csv(labels_file)
-except FileNotFoundError as e:
-    print(e)
-    labels = glob(f'{path_data}/*.txt')
-    labels = pd.concat([pd.read_csv(label_f, header=None)
-                        for label_f in labels])
-    labels.columns = ['fname', 'label']
-    labels.to_csv(labels_file, index=None)
-
-labels.label = labels.label.apply(str)
-labels.head()
+labels_train = pd.read_csv('tmp/labels_train.csv')
+labels_valid = pd.read_csv('tmp/labels_valid.csv')
+n_classess = labels_train.label.unique().shape[0]
+n_classess
+labels_train.groupby(by='label').count().plot()
 # %%
-labels.groupby(by='label').count().plot(style='.')
+labels_train.label = labels_train.label.apply(lambda x: f'{x:02d}')
+labels_valid.label = labels_valid.label.apply(lambda x: f'{x:02d}')
+# labels_train['label_bin'].values = keras.utils.np_utils.to_categorical(
+#     labels_train.label, n_classess)
 # %%
-ig = ImageDataGenerator(validation_split=0.2,
-                        preprocessing_function=utils.preprocess_img
-                        )
+ig = ImageDataGenerator(preprocessing_function=utils.preprocess_img)
 
 params_g = dict(batch_size=batch_size,
-                directory=path_data,
+                # directory=path_data,
                 # class_mode='other',
                 x_col='fname',
                 y_col='label',
@@ -67,16 +65,12 @@ params_g = dict(batch_size=batch_size,
                 seed=random_seed)
 
 train_g = ig.flow_from_dataframe(
-    labels, subset='training', **params_g)
+    labels_train, path_data_train, **params_g)
 valid_g = ig.flow_from_dataframe(
-    labels, subset='validation', **params_g)
+    labels_valid, path_data_valid, **params_g)
 # %%
-(imgs, lbs) = next(train_g)
-imgs.shape, lbs.shape
-
-# %%
-n_classess = labels.label.unique().shape[0]
-n_classess
+# (imgs, lbs) = next(train_g)
+# imgs.shape, lbs.shape
 
 
 # %%
@@ -91,7 +85,7 @@ x = GlobalAveragePooling2D()(x)
 
 # 添加一个全连接层
 # x = Dense(512, activation='relu')(x)
-# x = Dense(128, activation='relu')(x)
+x = Dense(256, activation='relu')(x)
 
 # 添加一个分类器，假设我们有200个类
 predictions = Dense(n_classess, activation='softmax')(x)
