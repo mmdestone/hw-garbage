@@ -32,7 +32,7 @@ import time
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # %%
 path_data = 'garbage_classify/train_data'
-batch_size = 32
+batch_size = 16
 img_width = 224
 img_height = 224
 img_size = 224
@@ -56,13 +56,14 @@ labels_valid.label = labels_valid.label.apply(lambda x: f'{x:02d}')
 # %%
 ig = ImageDataGenerator(preprocessing_function=utils.preprocess_img)
 
-params_g = dict(batch_size=batch_size,
-                # directory=path_data,
-                # class_mode='other',
-                x_col='fname',
-                y_col='label',
-                target_size=(img_width, img_height),
-                seed=random_seed)
+params_g = dict(
+    batch_size=batch_size,
+    # directory=path_data,
+    # class_mode='other',
+    x_col='fname',
+    y_col='label',
+    target_size=(img_width, img_height),
+    seed=random_seed)
 
 train_g = ig.flow_from_dataframe(
     labels_train, path_data_train, **params_g)
@@ -74,18 +75,18 @@ valid_g = ig.flow_from_dataframe(
 
 
 # %%
-# base_model = InceptionV3(
-#     weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
-# base_model = InceptionV3(weights=None, include_top=False)
-base_model = ResNet50(
+base_model = InceptionV3(
     weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
+# base_model = InceptionV3(weights=None, include_top=False)
+# base_model = ResNet50(
+#     weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
 # 添加全局平均池化层
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 
 # 添加一个全连接层
 # x = Dense(512, activation='relu')(x)
-x = Dense(256, activation='relu')(x)
+x = Dense(128, activation='relu')(x)
 
 # 添加一个分类器，假设我们有200个类
 predictions = Dense(n_classess, activation='softmax')(x)
@@ -95,8 +96,8 @@ model = Model(inputs=base_model.input, outputs=predictions)
 # model.summary()
 # 首先，我们只训练顶部的几层（随机初始化的层）
 # 锁住所有 InceptionV3 的卷积层
-for layer in base_model.layers:
-    layer.trainable = False
+# for layer in base_model.layers:
+#     layer.trainable = False
 # %%
 ckpt = ModelCheckpoint(
     'tmp/ckpt-'+time.strftime('%Y-%m-%d_%H_%M')+'-Epoch_{epoch:03d}-acc_{acc:.5f}-val_acc_{val_acc:.5f}.h5', save_best_only=True, monitor='val_acc')
@@ -108,7 +109,7 @@ model.compile(optimizer=Adam(lr=1e-4), loss='categorical_crossentropy',
               metrics=['accuracy'])
 model.fit_generator(
     train_g,
-    # steps_per_epoch=1,
+    # steps_per_epoch=100,
     steps_per_epoch=train_g.n // batch_size,
     epochs=100,
     callbacks=[ckpt, estop],
