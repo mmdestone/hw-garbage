@@ -37,7 +37,7 @@ class garbage_classify_service(TfServingBaseService):
         #     self.input_images = self.sess.graph.get_tensor_by_name(input_images_tensor_name)
         #     self.output_score = self.sess.graph.get_tensor_by_name(output_score_tensor_name)
 
-        self.model = load_model(self.model_path+'/ckpt-2019-08-14_19_06-Epoch_001-acc_0.91024-val_acc_0.71707.h5')
+        self.model = load_model(self.model_path+'/ckpt.h5')
 
         self.label_id_name_dict = \
             {
