@@ -116,7 +116,7 @@ class garbage_classify_service(TfServingBaseService):
             for file_name, file_content in v.items():
                 # img = Image.open(file_content)
                 img = Image.open(file_content)
-                img = img.resize((self.input_size,self.input_size))
+                img = img.resize((self.input_size,self.input_size), Image.LANCZOS)
                 img = np.array(img)
                 img = preprocess_img(img)
                 preprocessed_data[k] = img
