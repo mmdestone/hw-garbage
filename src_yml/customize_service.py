@@ -12,6 +12,20 @@ from keras.applications.imagenet_utils import preprocess_input
 def preprocess_img(x):
     return preprocess_input(x, mode='tf')
 
+def aug_predict(model, img):
+    img_flip = img.transpose(Image.FLIP_LEFT_RIGHT)
+    aug_imgs = [img, img_flip,
+                img.transpose(Image.ROTATE_90),
+                img.transpose(Image.ROTATE_180),
+                img.transpose(Image.ROTATE_270),
+                img_flip.transpose(Image.ROTATE_90),
+                img_flip.transpose(Image.ROTATE_180),
+                img_flip.transpose(Image.ROTATE_270)]
+    aug_imgs_arr = np.array([preprocess_img(np.array(x)) for x in aug_imgs])
+    res = model.predict(aug_imgs_arr)
+    lbs = np.argmax(res, axis=1).tolist()
+    return max(set(lbs), key=lbs.count)
+
 class garbage_classify_service(TfServingBaseService):
     def __init__(self, model_name, model_path):
         # these three parameters are no need to modify
@@ -117,8 +131,8 @@ class garbage_classify_service(TfServingBaseService):
                 # img = Image.open(file_content)
                 img = Image.open(file_content)
                 img = img.resize((self.input_size,self.input_size), Image.LANCZOS)
-                img = np.array(img)
-                img = preprocess_img(img)
+                # img = np.array(img)
+                # img = preprocess_img(img)
                 preprocessed_data[k] = img
         return preprocessed_data
 
@@ -128,14 +142,16 @@ class garbage_classify_service(TfServingBaseService):
         Here are a inference example of resnet, if you use another model, please modify this function
         """
         img = data[self.input_key_1]
-        img = img[np.newaxis, :, :, :]  # the input tensor shape of resnet is [?, 224, 224, 3]
-        # pred_score = self.sess.run([self.output_score], feed_dict={self.input_images: img})
-        pred_score = self.model.predict(img)
-        if pred_score is not None:
-            pred_label = np.argmax(pred_score, axis=1)[0]
-            result = {'result': self.label_id_name_dict[str(pred_label)]}
-        else:
-            result = {'result': 'predict score is None'}
+        # img = img[np.newaxis, :, :, :]  # the input tensor shape of resnet is [?, 224, 224, 3]
+        # # pred_score = self.sess.run([self.output_score], feed_dict={self.input_images: img})
+        # pred_score = self.model.predict(img)
+        # if pred_score is not None:
+        #     pred_label = np.argmax(pred_score, axis=1)[0]
+        #     result = {'result': self.label_id_name_dict[str(pred_label)]}
+        # else:
+        #     result = {'result': 'predict score is None'}
+        pred_label= aug_predict(self.model,img)
+        result = {'result': self.label_id_name_dict[str(pred_label)]}
         return result
 
     def _postprocess(self, data):
