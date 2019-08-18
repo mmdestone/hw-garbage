@@ -36,6 +36,7 @@ enhances = [(ImageEnhance.Brightness, 1),
             (ImageEnhance.Brightness, 1.4),
             (ImageEnhance.Contrast, 0.5),
             (ImageEnhance.Contrast, 1.4),
+            (ImageEnhance.Color, 0),
             (ImageEnhance.Color, 0.5),
             (ImageEnhance.Color, 1.5),
             ]
