@@ -24,7 +24,7 @@ path_data_train = 'tmp/data_train/'
 path_data_valid = 'tmp/data_valid/'
 labels_file = 'tmp/labels_raw.csv'
 img_size = 224
-samples_per_label = 10000
+samples_per_label = 6000
 
 # %%
 flips = [-1, Image.FLIP_LEFT_RIGHT]
