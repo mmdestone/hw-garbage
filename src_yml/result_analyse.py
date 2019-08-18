@@ -59,3 +59,7 @@ for i in range(40):
 plt.matshow(mat/mat.sum(axis=1))
 plt.colorbar()
 # %%
+plt.matshow((mat/mat.sum(axis=1)+mat.T/mat.sum(axis=1))/2)
+plt.colorbar()
+
+#%%
