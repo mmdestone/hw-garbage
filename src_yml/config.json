@@ -4,7 +4,7 @@
     "runtime": "python3.6",
     "metrics": {
         "f1": 0,
-        "accuracy": 0.6253,
+        "accuracy": 0,
         "precision": 0,
         "recall": 0
     },

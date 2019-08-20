@@ -6,7 +6,6 @@ from collections import OrderedDict
 # from tensorflow.python.saved_model import tag_constants
 from model_service.tfserving_model_service import TfServingBaseService
 from keras.models import load_model
-
 from keras.applications.imagenet_utils import preprocess_input
 
 def preprocess_img(x):
@@ -33,7 +32,7 @@ class garbage_classify_service(TfServingBaseService):
         self.model_path = model_path
         self.signature_key = 'predict_images'
 
-        self.input_size = 224  # the input image size of the model
+        self.input_size = 299  # the input image size of the model
 
         # add the input and output key of your pb model here,
         # these keys are defined when you save a pb file
