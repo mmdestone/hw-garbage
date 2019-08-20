@@ -46,3 +46,4 @@ res
 
 
 # %%
+print(res)
