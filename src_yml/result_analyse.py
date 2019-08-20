@@ -25,7 +25,7 @@ labels_valid = pd.read_csv('tmp/labels_valid.csv')
 lbs = []
 for r in labels_valid.itertuples():
     img = Image.open('garbage_classify/train_data/' +
-                     r.fname).resize((224, 224), Image.LANCZOS)
+                     r.fname).resize((299, 299), Image.LANCZOS)
     img = np.array(img)
     img = preprocess_img(img)
     pred = model.predict(np.array([img]))
@@ -61,5 +61,33 @@ plt.colorbar()
 # %%
 plt.matshow((mat/mat.sum(axis=1)+mat.T/mat.sum(axis=1))/2)
 plt.colorbar()
+
+# %%
+scores = np.diag(mat/mat.sum(axis=1))
+scores
+# %%
+mat_scores = mat/mat.sum(axis=1)
+bottles = [16, 26, 27, 31, 32, 35, 36, 23, 33]
+s = 0
+for i in bottles:
+    for j in bottles:
+        s += mat_scores[i, j]
+s/len(bottles)
+
+# %%
+bags = [0, 18, 20]
+s = 0
+for i in bags:
+    for j in bags:
+        s += mat_scores[i, j]
+s/len(bags)
+
+# %%
+fruits = [8, 9,12]
+s = 0
+for i in fruits:
+    for j in fruits:
+        s += mat_scores[i, j]
+s/len(fruits)
 
 #%%
