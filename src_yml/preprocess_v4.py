@@ -24,7 +24,7 @@ path_data_train = 'tmp/data_train/'
 path_data_valid = 'tmp/data_valid/'
 labels_file = 'tmp/labels_raw.csv'
 img_size = 299
-samples_per_label = 6000
+samples_per_label = 1000
 
 # %%
 flips = [-1, Image.FLIP_LEFT_RIGHT]
@@ -33,9 +33,9 @@ filters = [ImageFilter.BoxBlur(
     0), ImageFilter.GaussianBlur(2), ImageFilter.SHARPEN]
 enhances = [(ImageEnhance.Brightness, 1),
             (ImageEnhance.Brightness, 0.5),
-            (ImageEnhance.Brightness, 1.4),
+            (ImageEnhance.Brightness, 1.5),
             (ImageEnhance.Contrast, 0.5),
-            (ImageEnhance.Contrast, 1.4),
+            (ImageEnhance.Contrast, 1.5),
             (ImageEnhance.Color, 0),
             (ImageEnhance.Color, 0.5),
             (ImageEnhance.Color, 1.5),

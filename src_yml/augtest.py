@@ -2,13 +2,16 @@
 import numpy as np
 from PIL import Image
 import tensorflow as tf
+import keras
 from keras.models import load_model
 
 from keras.applications.imagenet_utils import preprocess_input
 
 
 def preprocess_img(x):
-    return preprocess_input(x, mode='tf')
+    x = x / 127.5
+    x -= 1.
+    return x
 
 
 # %%

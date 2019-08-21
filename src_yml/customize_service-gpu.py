@@ -6,10 +6,13 @@ from collections import OrderedDict
 # from tensorflow.python.saved_model import tag_constants
 from model_service.caffe_model_service import CaffeBaseService
 from keras.models import load_model
+import keras
 from keras.applications.imagenet_utils import preprocess_input
 
 def preprocess_img(x):
-    return preprocess_input(x, mode='tf')
+    x = x / 127.5
+    x -= 1.
+    return x
 
 def aug_predict(model, img):
     img_flip = img.transpose(Image.FLIP_LEFT_RIGHT)
@@ -28,8 +31,9 @@ def aug_predict(model, img):
 class garbage_classify_service(CaffeBaseService):
     def __init__(self, model_name, model_path):
         # these three parameters are no need to modify
-        if self.check_tf_version() is False:
-            raise Exception('current use tensorflow CPU version')
+        # if self.check_tf_version() is False:
+        #     raise Exception('current use tensorflow CPU version')
+        self.check_tf_version()
         self.model_name = model_name
         self.model_path = model_path
         self.signature_key = 'predict_images'
@@ -111,6 +115,7 @@ class garbage_classify_service(CaffeBaseService):
             print('use tensorflow-gpu', tf.__version__)
         else:
             print('use tensorflow', tf.__version__)
+        print('Keras version:',keras.__version__)
         return is_gpu_version
     # def center_img(self, img, size=None, fill_value=255):
     #     """
