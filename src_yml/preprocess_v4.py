@@ -23,7 +23,7 @@ path_data = 'garbage_classify/train_data/'
 path_data_train = 'tmp/data_train/'
 path_data_valid = 'tmp/data_valid/'
 labels_file = 'tmp/labels_raw.csv'
-img_size = 299
+img_size = 331
 samples_per_label = 1000
 
 # %%
