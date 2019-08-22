@@ -61,6 +61,11 @@
                     "package_name": "tensorflow-gpu",
                     "package_version": "1.8.0",
                     "restraint": "EXACT"
+                },
+                {
+                    "package_name": "scikit-image",
+                    "package_version": "0.15.0",
+                    "restraint": "EXACT"
                 }
             ]
         }

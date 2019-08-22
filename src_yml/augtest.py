@@ -3,22 +3,25 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 import keras
-from keras.models import load_model
-from keras.applications.nasnet import NASNetLarge
-from keras.models import Model, Sequential, Input
-from keras.layers import *
-from keras.optimizers import Adam,SGD
+from keras.models import *
+# from keras.layers import *
+# from keras.optimizers import *
+
 
 def preprocess_img(x):
     x = x / 127.5
     x -= 1.
     return x
 
+
 keras.__version__
 
 # %%
-img_size = 299
-model = load_model('tmp/ckpt.h5')
+img_size = 331
+# model = load_model('tmp/ckpt.h5')
+with open('tmp/model.json', 'r') as f:
+    model = model_from_json(f.read())
+model.load_weights('tmp/ckpt.h5')
 # %%
 img = Image.open('E:/garbage_classify/train_data/img_17725.jpg').resize(
     (img_size, img_size), Image.LANCZOS)
@@ -53,3 +56,4 @@ res
 
 # %%
 print(res)
+#%%
