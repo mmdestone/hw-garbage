@@ -4,21 +4,42 @@ from PIL import Image
 import tensorflow as tf
 import keras
 from keras.models import load_model
-
-from keras.applications.imagenet_utils import preprocess_input
-
+from keras.applications.nasnet import NASNetLarge
+from keras.models import Model, Sequential, Input
+from keras.layers import *
+from keras.optimizers import Adam,SGD
 
 def preprocess_img(x):
     x = x / 127.5
     x -= 1.
     return x
 
+keras.__version__
+#%%
+img_size = 331
+img_width = img_size
+img_height = img_size
+def get_model():
+    base_model = NASNetLarge(
+    weights=None, include_top=False, input_shape=(img_width, img_height, 3))
 
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+
+    x = Dense(128, activation='relu')(x)
+    x=Dropout(0.3)(x)
+
+    predictions = Dense(40, activation='softmax')(x)
+
+    model = Model(inputs=base_model.input, outputs=predictions)
+    return model
 # %%
-model = load_model('tmp/ckpt.h5')
+# model = load_model('tmp/ckpt.h5')
+model = get_model()
+model.load_weights('tmp/ckpt.h5')
 # %%
 img = Image.open('E:/garbage_classify/train_data/img_17725.jpg').resize(
-    (299, 299), Image.LANCZOS)
+    (331, 331), Image.LANCZOS)
 
 
 # %%
