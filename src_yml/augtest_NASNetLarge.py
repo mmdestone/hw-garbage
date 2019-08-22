@@ -15,10 +15,28 @@ def preprocess_img(x):
     return x
 
 keras.__version__
+#%%
+img_size = 331
+img_width = img_size
+img_height = img_size
+def get_model():
+    base_model = NASNetLarge(
+    weights=None, include_top=False, input_shape=(img_width, img_height, 3))
 
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+
+    x = Dense(128, activation='relu')(x)
+    x=Dropout(0.3)(x)
+
+    predictions = Dense(40, activation='softmax')(x)
+
+    model = Model(inputs=base_model.input, outputs=predictions)
+    return model
 # %%
-img_size = 299
-model = load_model('tmp/ckpt.h5')
+# model = load_model('tmp/ckpt.h5')
+model = get_model()
+model.load_weights('tmp/ckpt.h5')
 # %%
 img = Image.open('E:/garbage_classify/train_data/img_17725.jpg').resize(
     (img_size, img_size), Image.LANCZOS)
