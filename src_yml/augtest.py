@@ -17,14 +17,16 @@ def preprocess_img(x):
 keras.__version__
 
 # %%
-img_size = 331
+# img_size = 331
 # model = load_model('tmp/ckpt.h5')
 with open('tmp/model.json', 'r') as f:
     model = model_from_json(f.read())
 model.load_weights('tmp/ckpt.h5')
+#%%
+(b,w,h,c) = model.input_shape
 # %%
 img = Image.open('E:/garbage_classify/train_data/img_17725.jpg').resize(
-    (img_size, img_size), Image.LANCZOS)
+    (w, h), Image.LANCZOS)
 
 
 # %%
