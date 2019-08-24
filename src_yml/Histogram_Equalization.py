@@ -79,3 +79,6 @@ img.show()
 to_square(img).show()
 
 # %%
+img = Image.open('E:/garbage_classify/train_data/img_17954.jpg')
+
+#%%
