@@ -19,43 +19,46 @@ keras.__version__
 # %%
 # img_size = 331
 # model = load_model('tmp/ckpt.h5')
-with open('tmp/model.json', 'r') as f:
-    model = model_from_json(f.read())
-model.load_weights('tmp/ckpt.h5')
-#%%
-(b,w,h,c) = model.input_shape
+models = [None]*4
+for i in range(len(models)):
+    with open(f'tmp/model_{i}.json', 'r') as f:
+        models[i] = model_from_json(f.read())
+    models[i].load_weights(f'tmp/ckpt-{i}.h5')
 # %%
-img = Image.open('E:/garbage_classify/train_data/img_17725.jpg').resize(
-    (w, h), Image.LANCZOS)
-
 
 # %%
-def aug_predict(model, img):
-    img_flip = img.transpose(Image.FLIP_LEFT_RIGHT)
-    aug_imgs = [
-        img, img_flip,
-        img.transpose(Image.ROTATE_90),
-        img.transpose(Image.ROTATE_180),
-        img.transpose(Image.ROTATE_270),
-        img_flip.transpose(Image.ROTATE_90),
-        img_flip.transpose(Image.ROTATE_180),
-        img_flip.transpose(Image.ROTATE_270)
-    ]
-    aug_imgs_arr = np.array([preprocess_img(np.array(x)) for x in aug_imgs])
-    # aug_imgs_arr = np.array([np.array(x) for x in aug_imgs])
-    # aug_imgs_arr = preprocess_img(aug_imgs_arr)
+img = Image.open('E:/garbage_classify/train_data/img_17725.jpg')
 
-    res = model.predict(aug_imgs_arr, batch_size=8)
-    lbs = np.argmax(res, axis=1).tolist()
-    print(lbs)
-    return max(set(lbs), key=lbs.count)
+# %%
+
+
+def aug_predict_multi_model(models, img0):
+    res = []
+    for model in models:
+        img = img0.copy()
+        (b, w, h, c) = model.input_shape
+        img = img.resize((w, h))
+        img_flip = img.transpose(Image.FLIP_LEFT_RIGHT)
+        aug_imgs = [
+            img, img_flip,
+            img.transpose(Image.ROTATE_90),
+            img.transpose(Image.ROTATE_180),
+            img.transpose(Image.ROTATE_270),
+            img_flip.transpose(Image.ROTATE_90),
+            img_flip.transpose(Image.ROTATE_180),
+            img_flip.transpose(Image.ROTATE_270)
+        ]
+        aug_imgs_arr = np.array([preprocess_img(np.array(x))
+                                 for x in aug_imgs])
+        res.append(model.predict(aug_imgs_arr))
+    return np.array(res).sum(axis=(0,1)).argmax()
 
 
 # %%
-%time res = aug_predict(model, img)
+%time res = aug_predict_multi_model(models, img)
 res
 
 
 # %%
 print(res)
-#%%
+# %%
