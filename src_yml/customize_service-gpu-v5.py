@@ -60,7 +60,7 @@ class garbage_classify_service(CaffeBaseService):
         self.output_key_1 = 'output_score'
 
         self.models = [None]*4
-        for i in range(len(models)):
+        for i in range(len(self.models)):
             with open(f'{self.model_path}/model_{i}.json', 'r') as f:
                 self.models[i] = model_from_json(f.read())
             self.models[i].load_weights(f'{self.model_path}/ckpt-{i}.h5')
