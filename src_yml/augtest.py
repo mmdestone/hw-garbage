@@ -1,4 +1,7 @@
 # %%
+import glob
+from keras.preprocessing import image
+import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 import tensorflow as tf
@@ -51,7 +54,7 @@ def aug_predict_multi_model(models, img0):
         aug_imgs_arr = np.array([preprocess_img(np.array(x))
                                  for x in aug_imgs])
         res.append(model.predict(aug_imgs_arr))
-    return np.array(res).sum(axis=(0,1)).argmax()
+    return np.array(res).sum(axis=(0, 1)).argmax()
 
 
 # %%
@@ -61,4 +64,26 @@ res
 
 # %%
 print(res)
+# %%
+# %%
+# 设置生成器参数
+datagen = image.ImageDataGenerator(
+    preprocessing_function=preprocess_img,
+    channel_shift_range=30)
+
+gen_data = datagen.flow_from_directory('garbage_classify',
+                                       batch_size=9,
+                                       shuffle=False,
+                                    #    save_to_dir='tmp/test/',
+                                    #    save_prefix='gen',
+                                       target_size=(224, 224),
+                                       interpolation='lanczos')
+
+
+(img, label) = gen_data.next()
+
+
+# plt.imshow(img[0])
+# plt.imshow(img[1])
+plt.imshow(img[2])
 # %%
