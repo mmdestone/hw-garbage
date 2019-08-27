@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     labels.head()
     # %%
-    kfold = StratifiedKFold(n_splits=5, random_state=201908, shuffle=True)
+    kfold = StratifiedKFold(n_splits=10, random_state=201908, shuffle=True)
 
     # %%
     # for train, valid in kfold.split(labels.fname, labels.label):
