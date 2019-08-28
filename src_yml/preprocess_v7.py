@@ -62,7 +62,7 @@ def handle(label, augs_df, labels_tr):
     for r in imgs_aug.itertuples():
         fname = f'{r.flp}_{r.ro}_{r.flt}_{r.ehc}_{r.fname}'
         labels_tr_aug.append([fname, r.label])
-        img_raw = Image.open(path_data+r.fname)
+        img_raw = Image.open(path_data_train+r.fname)
         img_raw = to_square(img_raw)
         if r.flp == 0:
             img_flp = img_raw
