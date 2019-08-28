@@ -2,7 +2,7 @@
 import numpy as np
 from PIL import Image
 import tensorflow as tf
-from keras.models import load_model
+from keras.models import *
 import keras
 import pandas as pd
 from keras.preprocessing.image import ImageDataGenerator
@@ -15,7 +15,10 @@ def preprocess_img(x):
 
 
 # %%
-model = load_model('tmp/ckpt.h5')
+i = 0
+with open(f'tmp/model_{i}.json', 'r') as f:
+    model = model_from_json(f.read())
+    model.load_weights(f'tmp/ckpt-{i}.h5')
 
 
 # %%
@@ -63,8 +66,12 @@ plt.matshow((mat/mat.sum(axis=1)+mat.T/mat.sum(axis=1))/2)
 plt.colorbar()
 
 # %%
-scores = np.diag(mat/mat.sum(axis=1))
+scores = np.diag(mat/labels_valid.groupby(by='label').count().values)
 scores
+# %%
+label_scores = pd.DataFrame(
+    {'scores': scores, 'label': [str(i) for i in range(40)]})
+label_scores.plot(xticks=[i for i in range(40)],figsize=(16,9),grid=True,linewidth=3,style='-o')
 # %%
 mat_scores = mat/mat.sum(axis=1)
 bottles = [16, 26, 27, 31, 32, 35, 36, 23, 33]
@@ -83,11 +90,11 @@ for i in bags:
 s/len(bags)
 
 # %%
-fruits = [8, 9,12]
+fruits = [8, 9, 12]
 s = 0
 for i in fruits:
     for j in fruits:
         s += mat_scores[i, j]
 s/len(fruits)
 
-#%%
+# %%

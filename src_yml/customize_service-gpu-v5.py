@@ -59,7 +59,7 @@ class garbage_classify_service(CaffeBaseService):
         self.input_key_1 = 'input_img'
         self.output_key_1 = 'output_score'
 
-        self.models = [None]*4
+        self.models = [None]*2
         for i in range(len(self.models)):
             with open(f'{self.model_path}/model_{i}.json', 'r') as f:
                 self.models[i] = model_from_json(f.read())

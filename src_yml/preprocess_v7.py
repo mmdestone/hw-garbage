@@ -20,6 +20,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 from concurrent.futures import wait, ProcessPoolExecutor
 # %%
 path_data = 'garbage_classify/train_data/'
+path_new_data = 'garbage_classify/new_img/'
 path_data_train = 'tmp/data_train/'
 path_data_valid = 'tmp/data_valid/'
 labels_file = 'tmp/labels_raw.csv'
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     labels.head()
     # %%
-    kfold = StratifiedKFold(n_splits=10, random_state=201908, shuffle=True)
+    kfold = StratifiedKFold(n_splits=5, random_state=201908, shuffle=True)
 
     # %%
     # for train, valid in kfold.split(labels.fname, labels.label):
@@ -127,6 +128,20 @@ if __name__ == '__main__':
         img_new = to_square(img)
         img_new.save(path_data_train+r.fname)
 
+    new_data = []
+    for label in range(40):
+        imgs = glob(f'{path_new_data}{str(label)}/*.jpg')
+        print('Label :', label, 'New iamges:', len(imgs))
+        for i, img_path in enumerate(imgs):
+            fname = f'new_img_{label:02d}_{i:03d}.jpg'
+            new_data.append([fname, label])
+            img = Image.open(img_path).convert('RGB')
+            img_new = to_square(img)
+            img_new.save(path_data_train+fname)
+    new_data_df = pd.DataFrame(new_data, columns=['fname', 'label'])
+    # new_data_df.to_csv('tmp/test.csv', index=None)
+    labels_tr = pd.concat([labels_tr, new_data_df])
+
     # %%
     augs = []
     for r in tqdm(labels_tr.itertuples(), desc='Combining', total=labels_tr.shape[0]):
@@ -142,7 +157,7 @@ if __name__ == '__main__':
     # %%
     augs_df = pd.DataFrame(
         augs, columns=['fname', 'label', 'flp', 'ro', 'flt', 'ehc'])
-    
+
     # %%
     pool = ProcessPoolExecutor()
     tds = []
