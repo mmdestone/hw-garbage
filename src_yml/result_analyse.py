@@ -16,9 +16,11 @@ def preprocess_img(x):
 
 # %%
 i = 0
-with open(f'tmp/model_{i}.json', 'r') as f:
+# with open(f'tmp/model_{i}.json', 'r') as f:
+with open(f'tmp/model_baseline-Xception.json', 'r') as f:
     model = model_from_json(f.read())
-    model.load_weights(f'tmp/ckpt-{i}.h5')
+#     model.load_weights(f'tmp/ckpt-{i}.h5')
+    model.load_weights(f'tmp/ckpt-baseline-Xception-Epoch_028-acc_0.99945-val_acc_0.90937.h5')
 
 
 # %%
@@ -54,12 +56,12 @@ for i in range(40):
 
 
 # %%
-# plt.figure(figsize=(8, 4))
+plt.figure(figsize=(9,9))
 # plt.subplot(1, 2, 1)
 # plt.matshow(mat)
 # plt.colorbar()
 # plt.subplot(1, 2, 2)
-plt.matshow(mat/mat.sum(axis=1))
+plt.imshow(mat/mat.sum(axis=1))
 plt.colorbar()
 # %%
 plt.matshow((mat/mat.sum(axis=1)+mat.T/mat.sum(axis=1))/2)
