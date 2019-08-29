@@ -22,7 +22,7 @@ fts_train.shape, lbs_train.shape, fts_valid.shape, lbs_valid.shape
 
 
 def report_intermediate_result(env):
-    nni.report_intermediate_result(env.evaluation_result_list[0][2])
+    nni.report_intermediate_result(env.evaluation_result_list[1][2])
     # print(env.evaluation_result_list)
 
 
@@ -35,7 +35,7 @@ lgb.fit(fts_train, lbs_train,
         eval_metric='multi_error',
         verbose=100,
         callbacks=[report_intermediate_result],
-        early_stopping_rounds=100)
+        early_stopping_rounds=50)
 
 
 # %%
