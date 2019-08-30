@@ -1,0 +1,87 @@
+{
+    "learning_rate": {
+        "_type": "loguniform",
+        "_value": [
+            0.0001,
+            1
+        ]
+    },
+    "n_estimators": {
+        "_type": "choice",
+        "_value": [
+            100,
+            300,
+            500,
+            800,
+            1000,
+            3000
+        ]
+    },
+    "max_depth": {
+        "_type": "choice",
+        "_value": [
+            15,
+            20,
+            25,
+            30,
+            35
+        ]
+    },
+    "feature_fraction": {
+        "_type": "choice",
+        "_value": [
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            0.95
+        ]
+    },
+    "bagging_fraction": {
+        "_type": "choice",
+        "_value": [
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            0.95
+        ]
+    },
+    "bagging_freq": {
+        "_type": "choice",
+        "_value": [
+            2,
+            4,
+            5,
+            6,
+            8
+        ]
+    },
+    "lambda_l1": {
+        "_type": "uniform",
+        "_value": [
+            0,
+            1
+        ]
+    },
+    "lambda_l2": {
+        "_type": "choice",
+        "_value": [
+            0,
+            10,
+            15,
+            35,
+            40
+        ]
+    },
+    "cat_smooth": {
+        "_type": "choice",
+        "_value": [
+            1,
+            10,
+            15,
+            20,
+            35
+        ]
+    }
+}
