@@ -9,12 +9,11 @@ from model_service.caffe_model_service import CaffeBaseService
 import keras
 import efficientnet.keras as efn
 from keras.models import *
+from keras.applications.imagenet_utils import preprocess_input
 
 
 def preprocess_img(x):
-    x = x / 127.5
-    x -= 1.
-    return x
+    return preprocess_input(x, mode='torch')
 
 
 def aug_images(img_raw, img_size=(299, 299)):
@@ -53,7 +52,7 @@ def aug_predict(models, img0):
     for model in models:
         img = img0.copy()
         (b, w, h, c) = model.input_shape
-        imgs = aug_images(img,(w,h))
+        imgs = aug_images(img, (w, h))
         res.append(model.predict(imgs))
     return np.array(res).sum(axis=(0, 1)).argmax()
 
