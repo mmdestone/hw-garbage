@@ -66,6 +66,11 @@
                     "package_name": "scikit-image",
                     "package_version": "0.15.0",
                     "restraint": "EXACT"
+                },
+                {
+                    "package_name": "efficientnet",
+                    "package_version": "1.0.0b3",
+                    "restraint": "EXACT"
                 }
             ]
         }

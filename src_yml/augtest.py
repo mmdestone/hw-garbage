@@ -74,8 +74,8 @@ datagen = image.ImageDataGenerator(
 gen_data = datagen.flow_from_directory('garbage_classify',
                                        batch_size=9,
                                        shuffle=False,
-                                    #    save_to_dir='tmp/test/',
-                                    #    save_prefix='gen',
+                                       #    save_to_dir='tmp/test/',
+                                       #    save_prefix='gen',
                                        target_size=(224, 224),
                                        interpolation='lanczos')
 
@@ -86,4 +86,52 @@ gen_data = datagen.flow_from_directory('garbage_classify',
 # plt.imshow(img[0])
 # plt.imshow(img[1])
 plt.imshow(img[2])
+# %%
+img = Image.open('E:/garbage_classify/train_data/img_17725.jpg')
+img = Image.open('E:/garbage_classify/train_data/img_17615.jpg')
+# img = Image.open('E:/garbage_classify/train_data/img_34.jpg')
+# %%
+
+
+def aug_images(img_raw, img_size=(299, 299)):
+    (w, h) = img_raw.size
+    if h <= w:
+        b = (w-h)//2
+        box_center = (b, 0, h+b, h)
+        box_top = (0, 0, h, h)
+        box_bottom = (w-h, 0, w, h)
+    else:
+        b = (h-w)//2
+        box_center = (0, b, w, w+b)
+        box_top = (0, 0, w, w)
+        box_bottom = (0, h-w, w, h)
+
+    imgs = [
+        img_raw.resize(img_size, Image.LANCZOS),
+        img_raw.crop(box_center).resize(img_size, Image.LANCZOS),
+        img_raw.crop(box_top).resize(img_size, Image.LANCZOS),
+        img_raw.crop(box_bottom).resize(img_size, Image.LANCZOS),
+    ]
+    imgs_flip = [i.transpose(Image.FLIP_LEFT_RIGHT) for i in imgs]
+    imgs = imgs+imgs_flip
+    imgs_new = []
+    for img in imgs:
+        imgs_new.append(img)
+        imgs_new.append(img.transpose(Image.ROTATE_90))
+        imgs_new.append(img.transpose(Image.ROTATE_180))
+        imgs_new.append(img.transpose(Image.ROTATE_270))
+
+    return np.array([preprocess_img(np.array(x)) for x in imgs_new])
+
+
+# %%
+with open(f'tmp/model_baseline-EfficientNet-B5.json', 'r') as f:
+    model = model_from_json(f.read())
+    model.load_weights(
+        f'tmp/ckpt-baseline-EfficientNet-B5-Epoch_014-acc_0.97783-val_acc_0.92559.h5')
+
+# %%
+imgs = aug_images(img, (400, 400))
+%time preds = model.predict(imgs)
+np.argmax(preds, axis=1), np.array([preds]).sum(axis=(0, 1)).argmax()
 # %%
