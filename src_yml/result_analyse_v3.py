@@ -10,34 +10,49 @@ import matplotlib.pyplot as plt
 from keras.applications.imagenet_utils import preprocess_input
 import efficientnet.keras as efn
 from keras.metrics import categorical_accuracy
-
-def preprocess_img(x):
-    return preprocess_input(x, mode='torch')
-
+import math
 
 # %%
-with open(f'tmp/model.json', 'r') as f:
+with open(f'tmp/model_EfficientNet-B5-9.3.8-3.json', 'r') as f:
     model = model_from_json(f.read())
-    model.load_weights(f'tmp/ckpt.h5')
+    model.load_weights(
+        f'tmp/ckpt-EfficientNet-B5-9.3.8-3-Epoch_023-acc_0.99560-val_acc_0.94497.h5')
 
 # %%
 (b, w, h, c) = model.input_shape
+batch_size = 16
 # %%
 labels_valid = pd.read_csv('tmp/labels_valid.csv')
-# labels_valid.label = labels_valid.label.apply(lambda x: f'{x:02d}')
+labels_valid['lb'] = labels_valid.label.apply(lambda x: f'{x:02d}')
+
 # %%
-lbs = []
-for r in labels_valid.itertuples():
-    img = Image.open('garbage_classify/train_data/' +
-                     r.fname).resize((w, h), Image.LANCZOS)
-    img = np.array(img)
-    img = preprocess_img(img)
-    pred = model.predict(np.array([img]))
-    lbs.append(np.argmax(pred, axis=1)[0])
+ig = ImageDataGenerator(preprocessing_function=efn.preprocess_input)
+
+params_g = dict(
+    batch_size=batch_size,
+    # directory=path_data,
+    # class_mode='other',
+    x_col='fname',
+    y_col='lb',
+    target_size=(w, h),
+    interpolation='lanczos',
+    seed=201908)
+
+valid_g = ig.flow_from_dataframe(
+    labels_valid[:-(labels_valid.shape[0] % batch_size)], 'garbage_classify/train_data', shuffle=False, **params_g)
+
+# %%
+model.compile(optimizer='adam', loss='categorical_crossentropy',
+              metrics=['accuracy'])
+# %%
+%time model.evaluate_generator(valid_g, steps=valid_g.n//valid_g.batch_size)
+# %%
+preds = model.predict_generator(
+    valid_g, steps=valid_g.n//valid_g.batch_size)
 
 # %%
 real_labels = labels_valid.label.values
-pred_labels = np.array(lbs)
+pred_labels = np.argmax(preds, axis=1)
 pd.DataFrame(pred_labels).to_csv('tmp/preds.csv', index=False)
 # %%
 acc = (real_labels == pred_labels).sum()/real_labels.shape[0]
@@ -67,7 +82,8 @@ plt.matshow((mat/mat.sum(axis=1)+mat.T/mat.sum(axis=1))/2)
 plt.colorbar()
 
 # %%
-scores = np.diag(mat/labels_valid.groupby(by='label').count().values)
+scores = np.diag(
+    mat/labels_valid[['label', 'fname']].groupby(by='label').count().values)
 scores
 # %%
 label_scores = pd.DataFrame(
