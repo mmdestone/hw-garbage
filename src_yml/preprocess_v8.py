@@ -43,18 +43,18 @@ labels_val.head()
 #%%
 labels_tr.to_csv(f'tmp/labels_train_{__version__}.csv', index=None)
 labels_val.to_csv(f'tmp/labels_valid_{__version__}.csv', index=None)
-# # %%
-# shutil.rmtree(path_data_train, True)
-# shutil.rmtree(path_data_valid, True)
-# os.mkdir(path_data_train)
-# os.mkdir(path_data_valid)
-# # %%
-# for r in tqdm(labels_val.itertuples(), desc='Validation', total=labels_val.shape[0]):
-#     img = Image.open(path_data+r.fname)
-#     # img_new = img.resize((img_size, img_size), Image.LANCZOS)
-#     img.save(path_data_valid+r.fname)
-# # %%
-# for r in tqdm(labels_tr.itertuples(), desc='Train', total=labels_tr.shape[0]):
-#     img = Image.open(path_data+r.fname)
-#     # img_new = img.resize((img_size, img_size), Image.LANCZOS)
-#     img.save(path_data_train+r.fname)
+# %%
+shutil.rmtree(path_data_train, True)
+shutil.rmtree(path_data_valid, True)
+os.mkdir(path_data_train)
+os.mkdir(path_data_valid)
+# %%
+for r in tqdm(labels_val.itertuples(), desc='Validation', total=labels_val.shape[0]):
+    img = Image.open(path_data+r.fname)
+    # img_new = img.resize((img_size, img_size), Image.LANCZOS)
+    img.save(path_data_valid+r.fname)
+# %%
+for r in tqdm(labels_tr.itertuples(), desc='Train', total=labels_tr.shape[0]):
+    img = Image.open(path_data+r.fname)
+    # img_new = img.resize((img_size, img_size), Image.LANCZOS)
+    img.save(path_data_train+r.fname)
