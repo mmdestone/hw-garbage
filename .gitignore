@@ -1,5 +1,6 @@
 tmp/*
 garbage_classify/*
+garbage_classify_v2/*
 !.keep
 
 # Byte-compiled / optimized / DLL files
