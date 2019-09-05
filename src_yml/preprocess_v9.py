@@ -10,7 +10,7 @@ from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm, tqdm_gui, trange
 from PIL import Image, ImageEnhance, ImageFilter
 # %%
-__version__ = 'v8_2'
+__version__ = 'v9'
 path_data = 'garbage_classify/train_data_v2/'
 path_data_train = f'tmp/data_train_{__version__}/'
 path_data_valid = f'tmp/data_valid_{__version__}/'
