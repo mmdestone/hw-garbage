@@ -39,7 +39,7 @@ params_g = dict(
     seed=201908)
 
 valid_g = ig.flow_from_dataframe(
-    labels_valid[:-(labels_valid.shape[0] % batch_size)], 'garbage_classify/train_data', shuffle=False, **params_g)
+    labels_valid, 'garbage_classify/train_data', shuffle=False, **params_g)
 
 # %%
 model.compile(optimizer='adam', loss='categorical_crossentropy',
@@ -48,7 +48,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy',
 %time model.evaluate_generator(valid_g, steps=valid_g.n//valid_g.batch_size)
 # %%
 preds = model.predict_generator(
-    valid_g, steps=valid_g.n//valid_g.batch_size)
+    valid_g, steps=valid_g.n//valid_g.batch_size+1)
 
 # %%
 real_labels = labels_valid.label.values
