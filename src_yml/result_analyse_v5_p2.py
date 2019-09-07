@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 # %%
-labels_valid = pd.read_csv('tmp/labels_valid.csv')
+labels_valid = pd.read_csv('tmp/labels_valid_v11_fold0.csv')
 real_labels = labels_valid.label.values
 # %%
 lbs_np = np.load('tmp/pred_lbs.npy')
@@ -97,5 +97,5 @@ res_df.sort_values(by='acc', ascending=False, inplace=True)
 
 # %%
 res_df.to_csv('tmp/tta.csv',index=False)
-
+res_df
 #%%

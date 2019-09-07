@@ -36,18 +36,18 @@ for r in tqdm(labels_train.itertuples(), desc='Augmenting', total=labels_train.s
     img_raw.save(path_data_aug+r.fname)
     label_augs.append([r.fname, r.label])
     for rotate in rotates:
-        fname = f'{path_data_aug}rotate_{rotate}_{r.fname}'
+        fname = f'rotate_{rotate}_{r.fname}'
         label_augs.append([fname, r.label])
-        img_raw.rotate(rotate).save(fname)
+        img_raw.rotate(rotate).save(path_data_aug+fname)
     for i, flt in enumerate(filters):
-        fname = f'{path_data_aug}filter_{i}_{r.fname}'
+        fname = f'filter_{i}_{r.fname}'
         label_augs.append([fname, r.label])
-        img_raw.filter(flt).save(fname)
+        img_raw.filter(flt).save(path_data_aug+fname)
     for i, ehc in enumerate(enhances):
-        fname = f'{path_data_aug}enhance_{i}_{r.fname}'
+        fname = f'enhance_{i}_{r.fname}'
         label_augs.append([fname, r.label])
-        ehc[0](img_raw).enhance(ehc[1]).save(fname)
+        ehc[0](img_raw).enhance(ehc[1]).save(path_data_aug+fname)
     # break
 # %%
 label_augs = pd.DataFrame(label_augs, columns=['fname', 'label'])
-label_augs.to_csv(path_labels_train_aug)
+label_augs.to_csv(path_labels_train_aug, index=None)
