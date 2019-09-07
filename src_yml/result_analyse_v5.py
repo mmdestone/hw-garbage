@@ -13,16 +13,16 @@ from keras.metrics import categorical_accuracy
 from tqdm import tqdm
 
 # %%
-with open(f'tmp/model_EfficientNet-B5-9.4.6-0.json', 'r') as f:
+with open(f'tmp/model_EfficientNet-B5-9.5.14-2.json', 'r') as f:
     model = model_from_json(f.read())
     model.load_weights(
-        f'tmp/ckpt-EfficientNet-B5-9.4.6-0-Epoch_030-acc_0.99586-val_acc_0.94724.h5')
+        f'tmp/ckpt-EfficientNet-B5-9.5.14-2-Epoch_063-acc_0.99573-val_acc_0.94769_compressed.h5')
 
 # %%
 (b, w, h, c) = model.input_shape
 batch_size = 16
 # %%
-labels_valid = pd.read_csv('tmp/labels_valid.csv')
+labels_valid = pd.read_csv('tmp/labels_valid_v11_fold0.csv')
 labels_valid['lb'] = labels_valid.label.apply(lambda x: f'{x:02d}')
 # %%
 
@@ -61,7 +61,7 @@ def aug_images(img_raw, img_size=(299, 299)):
 # %%
 lbs = []
 for r in tqdm(labels_valid.itertuples(), total=labels_valid.shape[0]):
-    img = Image.open('garbage_classify/train_data/' + r.fname)
+    img = Image.open('garbage_classify/train_data_v2/' + r.fname)
     imgs = aug_images(img, (w, h))
     pred = model.predict(imgs)
     lbs.append(pred)

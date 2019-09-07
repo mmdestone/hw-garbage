@@ -13,10 +13,10 @@ from keras.metrics import categorical_accuracy
 import math
 
 # %%
-with open(f'tmp/model_2.json', 'r') as f:
+with open(f'tmp/model_EfficientNet-B5-9.5.14-2.json', 'r') as f:
     model = model_from_json(f.read())
     model.load_weights(
-        f'tmp/ckpt-2.h5')
+        f'tmp/ckpt-EfficientNet-B5-9.5.14-2-Epoch_063-acc_0.99573-val_acc_0.94769_compressed.h5')
 
 # %%
 (b, w, h, c) = model.input_shape
