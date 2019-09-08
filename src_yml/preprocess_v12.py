@@ -79,7 +79,7 @@ for r in tqdm(labels_extra.itertuples(), desc='Train_extra', total=labels_extra.
     # img = Image.open(path_data+r.fname)
     # # img_new = img.resize((img_size, img_size), Image.LANCZOS)
     # img.save(path_data_train+r.fname)
-    shutil.copyfile(path_data_train_extra + r.fname, path_data_train+r.fname)
+    shutil.copyfile(path_data_train_extra + r.fname, path_data+r.fname)
 
 
 #%%
