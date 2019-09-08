@@ -68,7 +68,7 @@ class BaseSequence(Sequence):
         """
         img = Image.open(img_path)
         resize_scale = self.img_size[0] / max(img.size[:2])
-        img = img.resize((int(img.size[0] * resize_scale), int(img.size[1] * resize_scale)))
+        img = img.resize((int(img.size[0] * resize_scale), int(img.size[1] * resize_scale)), Image.BICUBIC)
         img = img.convert('RGB')
         img = np.array(img)
 
