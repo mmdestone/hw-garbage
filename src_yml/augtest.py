@@ -9,7 +9,7 @@ import keras
 from keras.models import *
 # from keras.layers import *
 # from keras.optimizers import *
-
+import efficientnet.keras as efn 
 
 def preprocess_img(x):
     x = x / 127.5
@@ -22,7 +22,7 @@ keras.__version__
 # %%
 # img_size = 331
 # model = load_model('tmp/ckpt.h5')
-models = [None]*4
+models = [None]*3
 for i in range(len(models)):
     with open(f'tmp/model_{i}.json', 'r') as f:
         models[i] = model_from_json(f.read())
